@@ -67,6 +67,7 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
 
       config.headers.Authorization = formatToken(accessStore.accessToken);
       config.headers['Accept-Language'] = preferences.app.locale;
+      console.log('请求拦截器', config);
       return config;
     },
   });
@@ -76,7 +77,7 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
     defaultResponseInterceptor({
       codeField: 'code',
       dataField: 'data',
-      successCode: 0,
+      successCode: 200,
     }),
   );
 
@@ -102,6 +103,17 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
       ElMessage.error(errorMessage || msg);
     }),
   );
+
+  client.addResponseInterceptor({
+    fulfilled: (response) => {
+      console.log('后端返回数据:', response);
+      return response; // 一定要返回 response，否则后续 then 会拿不到数据
+    },
+    // rejected: (error) => {
+    //   console.error('请求错误:', error);
+    //   return Promise.reject(error);
+    // },
+  });
 
   return client;
 }
