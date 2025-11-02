@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed, onBeforeMount, ref } from 'vue';
 
 import { useAccessStore, useUserStore } from '@vben/stores';
 
@@ -15,29 +15,7 @@ const userStore = useUserStore();
 const accessStore = useAccessStore();
 
 // 模拟用户列表数据（后续可从后端接口获取）
-const userList = [
-  {
-    id: 1,
-    account: 'vben',
-    username: 'Admin',
-    email: 'admin@test.com',
-    role: '超级管理员',
-  },
-  {
-    id: 2,
-    account: 'test1',
-    username: '张三',
-    email: 'zhangsan@test.com',
-    role: '普通用户',
-  },
-  {
-    id: 3,
-    account: 'test2',
-    username: '李四',
-    email: 'lisi@test.com',
-    role: '普通用户',
-  },
-];
+const userList = ref([]);
 
 // 从 store 中获取权限数组
 const accessCodes = computed(() => accessStore.accessCodes || []);
@@ -57,6 +35,10 @@ const handleEdit = (row) => {
 const handleDelete = (row) => {
   ElMessage.warning(`删除用户：${row.username}`);
 };
+onBeforeMount(() => {
+  console.log('用户权限', accessStore.accessCodes);
+  console.log('用户信息', userStore.userInfo);
+});
 </script>
 
 <template>

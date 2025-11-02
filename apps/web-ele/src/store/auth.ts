@@ -9,7 +9,13 @@ import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 import { ElNotification } from 'element-plus';
 import { defineStore } from 'pinia';
 
-import { getAccessCodesApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
+import {
+  batchRegisterApi,
+  getAccessCodesApi,
+  getUserInfoApi,
+  loginApi,
+  logoutApi,
+} from '#/api';
 import { $t } from '#/locales';
 
 export const useAuthStore = defineStore('auth', () => {
@@ -74,6 +80,14 @@ export const useAuthStore = defineStore('auth', () => {
     };
   }
 
+  async function batchRegister() {
+    try {
+      const { data } = await batchRegisterApi();
+      return data;
+    } catch {
+      // 不做任何处理
+    }
+  }
   async function logout(redirect: boolean = true) {
     try {
       await logoutApi();
@@ -111,5 +125,6 @@ export const useAuthStore = defineStore('auth', () => {
     fetchUserInfo,
     loginLoading,
     logout,
+    batchRegister,
   };
 });

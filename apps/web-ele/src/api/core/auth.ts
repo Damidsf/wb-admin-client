@@ -49,3 +49,12 @@ export async function logoutApi() {
 export async function getAccessCodesApi() {
   return requestClient.get<string[]>('/auth/codes');
 }
+
+/**
+ * 批量注册
+ */
+export async function batchRegisterApi() {
+  return baseRequestClient.post('/auth/batch_register', {
+    withCredentials: true,
+  });
+}

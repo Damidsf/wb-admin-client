@@ -5,6 +5,7 @@ import { preferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
 import { startProgress, stopProgress } from '@vben/utils';
 
+import { getAccessCodesApi } from '#/api';
 import { accessRoutes, coreRouteNames } from '#/router/routes';
 import { useAuthStore } from '#/store';
 
@@ -94,6 +95,12 @@ function setupAccessGuard(router: Router) {
     // 当前登录用户拥有的角色标识列表
     const userInfo = userStore.userInfo || (await authStore.fetchUserInfo());
     const userRoles = userInfo.roles ?? [];
+
+    // 没有权限信息，拉取权限 getAccessCodesApi()
+    if (!accessStore.accessCodes?.length) {
+      const accessCodes = await getAccessCodesApi();
+      accessStore.setAccessCodes(accessCodes);
+    }
 
     // 生成菜单和路由
     const { accessibleMenus, accessibleRoutes } = await generateAccess({
